@@ -1,0 +1,36 @@
+.excalidraw.excalidraw {
+  --color-primary: #319ffe;
+  --color-primary-darker: #1a8ef0;
+  --color-primary-darkest: #0f72c9;
+  --color-primary-light: #dcefff;
+  --color-primary-light-darker: #c8e5ff;
+  --color-primary-hover: #1a8ef0;
+  --color-selection: #319ffe;
+  --color-surface-high: #eef7ff;
+  --color-surface-primary-container: #d6ecff;
+  --color-on-primary-container: #00315e;
+  --color-brand-hover: #1a8ef0;
+  --color-brand-active: #0f72c9;
+  --color-logo-text: #00315e;
+  --button-hover-bg: #eef7ff;
+}
+
+.excalidraw.excalidraw.theme--dark {
+  --color-primary: #6db9ff;
+  --color-primary-darker: #80c3ff;
+  --color-primary-darkest: #94cdff;
+  --color-primary-light: #2c4560;
+  --color-primary-light-darker: #253a52;
+  --color-primary-hover: #8ac8ff;
+  --color-selection: #1a7fd6;
+  --color-surface-primary-container: #1f4266;
+  --color-on-primary-container: #d6ecff;
+  --color-brand-hover: #8ac8ff;
+  --color-brand-active: #a6d4ff;
+  --color-logo-text: #d6ecff;
+}
+
+/* Help dialog: keep only "Documentação"; hide blog, GitHub issues and YouTube links. */
+.excalidraw .HelpDialog__header .HelpDialog__btn:not([href*="docs.excalidraw"]) {
+  display: none;
+}
