@@ -32,4 +32,9 @@ export const htmlToSvg = (html, width, height) =>
   `<div class="md" style="width:${width}px">${toXhtml(html)}</div></div>` +
   `</foreignObject></svg>`;
 
-export const svgToDataURL = (svg) => `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+// Excalidraw decodes SVG data URLs with atob, so they must be base64 (of UTF-8 bytes).
+export const svgToDataURL = (svg) => {
+  let bin = "";
+  for (const b of new TextEncoder().encode(svg)) bin += String.fromCharCode(b);
+  return `data:image/svg+xml;base64,${btoa(bin)}`;
+};
