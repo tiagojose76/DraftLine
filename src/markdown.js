@@ -4,8 +4,10 @@ export const MD_WIDTH = 720;
 
 const escape = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
-// Raw HTML in the .md is shown as text, never rendered: it lands inside an image.
-const marked = new Marked({ renderer: { html: ({ text }) => escape(text) } });
+// Raw HTML is shown as text; images become alt text (SVG-as-image can't load external files).
+const marked = new Marked({
+  renderer: { html: ({ text }) => escape(text), image: ({ text }) => escape(text) },
+});
 
 export const MD_CSS = `
 .md{box-sizing:border-box;padding:24px 28px;background:#fff;color:#1e1e1e;font:16px/1.5 -apple-system,"Segoe UI",Helvetica,Arial,sans-serif;word-wrap:break-word}
@@ -22,14 +24,12 @@ export const MD_CSS = `
 
 export const mdToHtml = (md) => marked.parse(md);
 
-// SVG is XML: marked's void tags (<br>, <hr>, <img ...>) must be self-closed.
-const toXhtml = (html) => html.replace(/<(br|hr|img|input)\b([^>]*?)\/?>/g, "<$1$2/>");
-
-export const htmlToSvg = (html, width, height) =>
+// xhtml must be well-formed XML (serialize the measured DOM with XMLSerializer).
+export const htmlToSvg = (xhtml, width, height) =>
   `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">` +
   `<foreignObject width="100%" height="100%">` +
   `<div xmlns="http://www.w3.org/1999/xhtml"><style>${MD_CSS}</style>` +
-  `<div class="md" style="width:${width}px">${toXhtml(html)}</div></div>` +
+  `<div class="md" style="width:${width}px">${xhtml}</div></div>` +
   `</foreignObject></svg>`;
 
 // Excalidraw decodes SVG data URLs with atob, so they must be base64 (of UTF-8 bytes).

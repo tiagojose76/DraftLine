@@ -13,12 +13,10 @@ test("empty markdown", () => {
   expect(mdToHtml("").trim()).toBe("");
 });
 
-test("produces well-formed xml", () => {
-  const svg = htmlToSvg(mdToHtml("a & b `<x>`\n\n---"), 720, 100);
-  expect(svg).toContain("&amp;");
-  expect(svg).toContain("&lt;x&gt;");
-  expect(svg).not.toContain("& ");
-  expect(svg).not.toContain("<hr>");
+test("escapes ampersands and angle brackets", () => {
+  const html = mdToHtml("a & b `<x>`");
+  expect(html).toContain("&amp;");
+  expect(html).toContain("&lt;x&gt;");
 });
 
 test("keeps accents", () => {
@@ -26,4 +24,10 @@ test("keeps accents", () => {
   expect(url.startsWith("data:image/svg+xml;base64,")).toBe(true);
   const bytes = Uint8Array.from(atob(url.split(",")[1]), (c) => c.charCodeAt(0));
   expect(new TextDecoder().decode(bytes)).toContain("ação");
+});
+
+test("images become alt text", () => {
+  const html = mdToHtml("![foto <a>](http://x/y.png)");
+  expect(html).not.toContain("<img");
+  expect(html).toContain("foto &lt;a&gt;");
 });
