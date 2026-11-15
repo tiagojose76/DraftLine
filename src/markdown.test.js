@@ -23,5 +23,7 @@ test("produces well-formed xml", () => {
 
 test("keeps accents", () => {
   const url = svgToDataURL(htmlToSvg(mdToHtml("ação"), 720, 50));
-  expect(decodeURIComponent(url.split(",")[1])).toContain("ação");
+  expect(url.startsWith("data:image/svg+xml;base64,")).toBe(true);
+  const bytes = Uint8Array.from(atob(url.split(",")[1]), (c) => c.charCodeAt(0));
+  expect(new TextDecoder().decode(bytes)).toContain("ação");
 });
